@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("/resource")
 public class ResourceController {
@@ -12,7 +14,7 @@ public class ResourceController {
 
 
     @GetMapping
-    public ResponseEntity<String> getResource() {
-        return ResponseEntity.ok("My secure resource");
+    public ResponseEntity<Set<String>> getResource() {
+        return ResponseEntity.ok(Set.of("My secure resource"));
     }
 }

@@ -14,8 +14,8 @@ public class UserController {
 
     private final NonceService nonceService;
 
-    @GetMapping("/nonce/{pubKey}")
-    public Integer getNonce(@PathVariable String pubKey) {
-        return nonceService.getNonce(pubKey);
+    @GetMapping("/nonce/{address}")
+    public Integer getNonce(@PathVariable String address) {
+        return nonceService.getNonce(address);
     }
 }

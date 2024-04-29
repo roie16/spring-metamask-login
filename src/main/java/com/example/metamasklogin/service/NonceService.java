@@ -19,14 +19,12 @@ public class NonceService {
         map = new HashMap<>();
     }
 
-    public Integer getNonce(String pubkey) {
-        map.putIfAbsent(pubkey, Math.abs(new Random().nextInt()));
-        return map.get(pubkey);
+    public Integer getNonce(String address) {
+        map.putIfAbsent(address, Math.abs(new Random().nextInt()));
+        return map.get(address);
     }
 
-    @SuppressWarnings("unused")
-    public void clearNonce(String pubkey) {
-        map.remove(pubkey);
+    public void replaceNonce(String address) {
+        map.put(address, Math.abs(new Random().nextInt()));
     }
-
 }
