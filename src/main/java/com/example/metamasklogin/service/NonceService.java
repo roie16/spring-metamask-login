@@ -3,8 +3,8 @@ package com.example.metamasklogin.service;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -16,7 +16,7 @@ public class NonceService {
 
     @PostConstruct
     public void init() {
-        map = new HashMap<>();
+        map = new LinkedCaseInsensitiveMap<>();
     }
 
     public Integer getNonce(String address) {
