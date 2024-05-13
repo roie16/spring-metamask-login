@@ -30,14 +30,17 @@ public class SigValidationService {
         Sign.SignatureData data = new Sign.SignatureData(v, r, s);
 
         // Retrieve public key
-        BigInteger publicKey;
+
         try {
-            publicKey = Sign.signedPrefixedMessageToKey(message.getBytes(), data);
+            return assertAddressIsEqualToRecover(address, message, data);
         } catch (SignatureException e) {
             log.debug("Failed to recover public key", e);
             return false;
         }
+    }
 
+    private boolean assertAddressIsEqualToRecover(String address, String message, Sign.SignatureData data) throws SignatureException {
+        BigInteger publicKey = Sign.signedPrefixedMessageToKey(message.getBytes(), data);
         // Get recovered address and compare with the initial address
         String recoveredAddress = "0x" + Keys.getAddress(publicKey);
         return address.equalsIgnoreCase(recoveredAddress);
