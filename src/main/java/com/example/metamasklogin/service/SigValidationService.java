@@ -28,9 +28,6 @@ public class SigValidationService {
         byte[] r = copyOfRange(signatureBytes, 0, 32);
         byte[] s = copyOfRange(signatureBytes, 32, 64);
         Sign.SignatureData data = new Sign.SignatureData(v, r, s);
-
-        // Retrieve public key
-
         try {
             return assertAddressIsEqualToRecover(address, message, data);
         } catch (SignatureException e) {
@@ -40,6 +37,7 @@ public class SigValidationService {
     }
 
     private boolean assertAddressIsEqualToRecover(String address, String message, Sign.SignatureData data) throws SignatureException {
+        // Retrieve public key
         BigInteger publicKey = Sign.signedPrefixedMessageToKey(message.getBytes(), data);
         // Get recovered address and compare with the initial address
         String recoveredAddress = "0x" + Keys.getAddress(publicKey);
