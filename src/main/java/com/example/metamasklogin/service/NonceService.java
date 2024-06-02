@@ -1,30 +1,37 @@
 package com.example.metamasklogin.service;
 
-import jakarta.annotation.PostConstruct;
+import com.example.metamasklogin.model.MyAwesomeUser;
+import com.example.metamasklogin.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedCaseInsensitiveMap;
 
-import java.util.Map;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class NonceService {
 
-    private Map<String, Integer> map;
-
-    @PostConstruct
-    public void init() {
-        map = new LinkedCaseInsensitiveMap<>();
-    }
+    private final UserRepository userRepository;
 
     public Integer getNonce(String address) {
-        map.putIfAbsent(address, Math.abs(new Random().nextInt()));
-        return map.get(address);
+        return userRepository.findByAddress(address)
+                .map(this::calculateAndReturnNonce)
+                .orElseThrow();
     }
 
     public void replaceNonce(String address) {
-        map.put(address, Math.abs(new Random().nextInt()));
+        userRepository.findByAddress(address).ifPresent(this::updateNonce);
+    }
+
+    private Integer calculateAndReturnNonce(MyAwesomeUser myAwesomeUser) {
+        if (myAwesomeUser.getNonce() == null) {
+            updateNonce(myAwesomeUser);
+        }
+        return myAwesomeUser.getNonce();
+    }
+
+    private void updateNonce(MyAwesomeUser myAwesomeUser) {
+        myAwesomeUser.setNonce(Math.abs(new Random().nextInt()));
+        userRepository.save(myAwesomeUser);
     }
 }

@@ -1,5 +1,8 @@
 package com.example.metamasklogin.security;
 
+import com.example.metamasklogin.model.MyAwesomeUser;
+import com.example.metamasklogin.repo.UserRepository;
+import com.example.metamasklogin.service.MyUserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,17 +16,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import java.util.List;
+import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
@@ -57,9 +56,20 @@ public class CustomWebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails roie = new User("roie", passwordEncoder.encode("1234"), List.of(new SimpleGrantedAuthority("0x7cc19e66747f65240a7fd79ffc82da42b0baf7ce")));
-        return new InMemoryUserDetailsManager(roie);
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        MyAwesomeUser roie = MyAwesomeUser.builder()
+                .username("roie")
+                .password(passwordEncoder.encode("1234"))
+                .enabled(true)
+                .authorities(Set.of())
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .nonce(null)
+                .address("0x7cc19e66747f65240a7fd79ffc82da42b0baf7ce")
+                .build();
+        userRepository.save(roie);
+        return new MyUserDetailService(userRepository);
     }
 
     @SuppressWarnings("deprecation")

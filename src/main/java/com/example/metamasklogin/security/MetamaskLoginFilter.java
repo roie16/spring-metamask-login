@@ -1,5 +1,6 @@
 package com.example.metamasklogin.security;
 
+import com.example.metamasklogin.model.MyAwesomeUser;
 import com.example.metamasklogin.service.NonceService;
 import com.example.metamasklogin.service.SigValidationService;
 import jakarta.servlet.FilterChain;
@@ -41,11 +42,12 @@ public class MetamaskLoginFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private String getAddress(@NotNull HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("name"))
                 .map(userDetailsService::loadUserByUsername)
-                .map(userDetails -> userDetails.getAuthorities().stream().findFirst().get().getAuthority())
+                .filter(MyAwesomeUser.class::isInstance)
+                .map(MyAwesomeUser.class::cast)
+                .map(MyAwesomeUser::getAddress)
                 .orElse("");
     }
 }
