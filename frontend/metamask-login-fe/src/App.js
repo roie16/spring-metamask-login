@@ -20,7 +20,7 @@ function App() {
         }
     };
 
-    const login = async function () {
+    const loginWithMetamask = async function () {
         if (!window.ethereum) {
             console.error('Please install MetaMask');
             return;
@@ -76,7 +76,7 @@ function App() {
                 >
                     Learn React
                 </a>
-                <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={() => login()}>Get resource
+                <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={() => loginWithMetamask()}>Get resource
                     with Metamask
                 </button>
                 <br/>

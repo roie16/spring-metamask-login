@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class CustomWebSecurityConfigurerAdapter {
                 .authorizeHttpRequests(this::pathMatcher)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .userDetailsService(userDetailsService)
-                .addFilter(new BasicAuthenticationFilter(authenticationManager))
+                .addFilterBefore(new BasicAuthenticationFilter(authenticationManager), AuthorizationFilter.class)
                 .addFilterAfter(metamaskLoginFilter, BasicAuthenticationFilter.class);
         return http.build();
     }
@@ -58,7 +59,7 @@ public class CustomWebSecurityConfigurerAdapter {
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails roie = new User("roie", passwordEncoder.encode("1234"), List.of(new SimpleGrantedAuthority("0x7cc19e66747f65240a7fd79ffc82da42b0baf7ce")));
+        UserDetails roie = new User("roie", passwordEncoder.encode("1234"), List.of(new SimpleGrantedAuthority("0xc1b7399e7bece19885c88265407368ad71e11451")));
         return new InMemoryUserDetailsManager(roie);
     }
 
