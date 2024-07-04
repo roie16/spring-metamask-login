@@ -31,11 +31,6 @@ import java.util.List;
 @Slf4j
 public class CustomWebSecurityConfigurerAdapter {
 
-    private void pathMatcher(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
-        auth.requestMatchers(HttpMethod.GET, "/user/nonce/**").permitAll();
-        auth.anyRequest().authenticated();
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService, MetamaskLoginFilter metamaskLoginFilter, AuthenticationManager authenticationManager) throws Exception {
         http
@@ -69,4 +64,8 @@ public class CustomWebSecurityConfigurerAdapter {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 
+    private void pathMatcher(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth) {
+        auth.requestMatchers(HttpMethod.GET, "/user/nonce/**").permitAll();
+        auth.anyRequest().authenticated();
+    }
 }
